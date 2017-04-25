@@ -21,7 +21,8 @@
 // n k -- over
 // n k n -- 1-
 // n k n-1 -- p2fact
-// n k r d -- -rot
+// n k r d -- rot
 // n r d k -- 0 do
-// n r d
-  over 1- p2fact -rot 0 do 
+// n r d -- x
+// x
+  over 1- p2fact rot 0 do 
