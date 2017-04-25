@@ -6,6 +6,7 @@
   over swap 1 do over * loop swap drop ;
 : pow ( n p -- n^p )
   dup 1 > if pow2+ else drop then ;
+: square ( n -- n^2) dup * ;
 : ?odd ( n -- odd ) 1 and ;
 
 // Miller-Rabin primality test (64-bit)
@@ -15,5 +16,12 @@
   
 : p2fact ( n -- r d )
   64 0 do dup ?odd if i leave then 2/ loop ;
+
 : ?prime ( n k -- bool )
-  swap dup 1- p2fact x ;
+// n k -- over
+// n k n -- 1-
+// n k n-1 -- p2fact
+// n k r d -- -rot
+// n r d k -- 0 do
+// n r d
+  over 1- p2fact -rot 0 do 
