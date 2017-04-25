@@ -26,27 +26,27 @@
 : ?odd ( n -- bool ) 1 and ;
 
 // Miller-Rabin primality test (64-bit)
-: a ( n -- 2 < a < n-1 ) 26 ;
-: x ( n r d -- x )
-// n r d -- -rot
-// r d n -- a
-// r d a -- swap
-// r a d -- pow
-// r a^d -- swap
-// a^d r -- mod
+: a ( n -- 2 < a < n-2 ) 26 ;
+: x ( n d -- x )
+// n d -- over
+// n d n -- a
+// n d a -- swap
+// n a d -- pow
+// n a^d -- swap
+// a^d n -- mod
 // x
-  -rot a swap pow swap mod ;
+  over a swap pow swap mod ;
 
-: p2fact ( n -- r d )
+: p2fact ( n -- d r )
 // n -- 64 0 do
-// r -- dup
-// r r -- ?odd
-// r b -- if
-// r -- i
-// r i -- leave
+// d -- dup
+// d d -- ?odd
+// d b -- if then
+// d -- i
+// d r -- leave
 //
-// r -- 2/
-// r -- loop
+// d -- 2/
+// d -- loop
   64 0 do dup ?odd if i leave then 2/ loop ;
 
 : compx ( x n -- x )
@@ -90,8 +90,21 @@
 // n k -- over
 // n k n -- 1-
 // n k n-1 -- p2fact
-// n k r d -- rot
-// n r d k -- 0 do
-// n r d -- x
-// x
-  over 1- p2fact rot 0 do ;
+// n k d r -- rot
+// n d r k -- 0 do
+// n d r -- 2over
+// n d r n d -- over
+// n d r n d n - x
+// n d r n x -- dup
+// n d r n x x -- 1=
+// n d r n x b -- if then
+// n d r n x -- 2drop
+// else
+// n d r n x -- rot
+// n d n x r -- ?composite
+// n d -- !!!
+// n d r -- loop
+  over 1- p2fact rot
+  0 do 2over x dup
+    1= if 2drop else ?composite then
+;
