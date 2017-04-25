@@ -92,19 +92,23 @@
 // n k n-1 -- p2fact
 // n k d r -- rot
 // n d r k -- 0 do
-// n d r -- 2over
-// n d r n d -- over
-// n d r n d n - x
-// n d r n x -- dup
-// n d r n x x -- 1=
-// n d r n x b -- if then
-// n d r n x -- 2drop
-// else
-// n d r n x -- rot
-// n d n x r -- ?composite
-// n d -- !!!
-// n d r -- loop
+// n d r -- 2over 2over
+// n d r n d r n -- rot
+// n d r n r n d -- x
+// n d r n r x -- dup
+// n d r n r x x -- 1=
+// n d r n r x b -- if then
+// n d r n r x -- 2drop drop
+// n d r -- else
+// n d r n r x -- swap
+// n d r n x r -- ?composite
+// n d r b -- if then
+// n d r -- 2drop drop 0
+// 0 -- leave
+//
+// n d r -- loop 2drop drop 1
+// 1
   over 1- p2fact rot
-  0 do 2over x dup
-    1= if 2drop else ?composite then
-;
+  0 do 2over 2over rot x dup
+    1= if 2drop drop else ?composite if 2drop drop 0 leave then then
+  loop 2drop drop 1 ;
