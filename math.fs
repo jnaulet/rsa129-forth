@@ -20,5 +20,6 @@
     \ n p -- drop
     \ n^1
     dup 1 > if pow2+ else drop then ;
+
 : square ( n -- n^2) dup * ;
-: ?odd ( n -- bool ) 1 and ;
+: ?odd ( n -- f ) 1 and ;

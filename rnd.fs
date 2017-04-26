@@ -9,6 +9,7 @@ variable rndseed
     16 rshift 0xffffffff and ;
 
 : seed ( n -- ) \ full 32-bit seed required
+    \ TODO : make any number 1 to n 16bit-shift compliant
     rndseed ! ;
 
 : random ( -- n )
