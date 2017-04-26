@@ -50,10 +50,6 @@ variable d
     \ x
     swap square swap mod ;
 
-: ?quickcomp ( x -- f )
-    \ x -- 1=
-    \ f
-
 : ?composite1+ ( n x r-1 -- f )
     \ n x r-1 -- 0 do
     \ n x -- over
