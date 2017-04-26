@@ -27,7 +27,7 @@ variable d
     \
     dup n ! 1- p2fact r ! d ! ;
 
-: setup ( n -- )
+: primesetup ( n -- )
     \ setup (FIXME)
     0x12345678 seed setnrd ;
 
@@ -50,6 +50,10 @@ variable d
     \ x
     swap square swap mod ;
 
+: ?quickcomp ( x -- f )
+    \ x -- 1=
+    \ f
+
 : ?composite1+ ( n x r-1 -- f )
     \ n x r-1 -- 0 do
     \ n x -- over
@@ -57,27 +61,32 @@ variable d
     \ n x -- dup
     \ n x x -- 1 =
     \ n x f -- if
-    \ n x -- 2drop 1
-    \ 1 -- leave
-    \
+    \ n x -- 1
+    \ n x 1 -- leave
+    \ -- then
     \ n x -- 2dup
     \ n x n x -- 1+
     \ n x n x+1 -- =
-    \ n x f -- if then
-    \ n x -- 2drop 0
-    \ 0 -- leave
-    \
+    \ n x f -- if
+    \ n x -- 0
+    \ n x 0 -- leave
+    \ -- then
     \ n x -- loop
-    \ n x -- 2drop
-    \ -- 1
-    \ 1
     0 do over x2modn dup
 	1 = if 2drop 1 leave then
 	2dup 1+ = if 2drop 0 leave then
-    loop 2drop 1 ;
+    loop ;
 
 : ?composite ( n x r -- f )
-    1- dup 0> if ?composite1+ else 1 then ;
+    \ n x r -- 1-
+    \ n x r-1 -- dup
+    \ n x r-1 r-1 -- 0>
+    \ n x r-1 f -- if
+    \ n x r-1 -- ?composite1+
+    \ f -- else
+    \ n x r-1 -- 2drop drop 1
+    \ 1
+    1- dup 0> if ?composite1+ else 2drop drop 1 then ;
 
 : a ( n -- 2 < a < n-2 )
     2 - 2 swap rndlimit ;
@@ -94,25 +103,27 @@ variable d
 
 \ Main algorithm
 : ?prime ( k n -- f )
-    \ k n -- setnrd
+    \ k n -- primesetup
     \ k -- 0 do n @ dup d @
     \ n n d -- x
     \ n x -- dup
     \ n x x -- rot
     \ x x n -- ?witness
-    \ x f -- if then
+    \ x f -- if
+    \ x -- drop
+    \ --
+    \ x -- else
     \ x -- r @ n @
     \ x r n -- -rot
     \ n x r -- ?composite
+    \ f -- if
     \ -- 0 leave
-    \ 0
-    \ else
-    \ x -- drop
+    \ 0 -- then
+    \ -- then
     \ -- loop 1
-    \ 1
-    setup
+    primesetup \ ?
     0 do n @ dup d @ x dup rot
 	?witness if drop else r @ n @ -rot
 	    ?composite if 0 leave then
 	then
-    loop 1 ; \ probably prime
+    loop ; \ probably prime here
