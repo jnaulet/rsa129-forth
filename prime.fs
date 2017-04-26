@@ -50,28 +50,32 @@ variable d
     \ x
     swap square swap mod ;
 
+variable ret
+
 : ?composite1+ ( n x r-1 -- f )
+    \ n x r-1 -- 1 ret !
     \ n x r-1 -- 0 do
     \ n x -- over
     \ n x n -- x2modn
     \ n x -- dup
     \ n x x -- 1 =
     \ n x f -- if
-    \ n x -- 1
-    \ n x 1 -- leave
+    \ n x -- 1 ret !
+    \ n x -- leave
     \ -- then
     \ n x -- 2dup
     \ n x n x -- 1+
     \ n x n x+1 -- =
     \ n x f -- if
-    \ n x -- 0
-    \ n x 0 -- leave
+    \ n x -- 0 ret !
+    \ n x -- leave
     \ -- then
-    \ n x -- loop
-    0 do over x2modn dup
-	1 = if 2drop 1 leave then
-	2dup 1+ = if 2drop 0 leave then
-    loop ;
+    \ n x -- loop 2drop ret @
+    \ f
+    1 ret ! 0 do over x2modn dup
+      1 = if 1 ret ! leave then
+      2dup 1+ = if 0 ret ! leave then
+    loop 2drop ret @ ;
 
 : ?composite ( n x r -- f )
     \ n x r -- 1-
@@ -99,7 +103,7 @@ variable d
 
 \ Main algorithm
 : ?prime ( k n -- f )
-    \ k n -- primesetup
+    \ k n -- primesetup 1 ret !
     \ k -- 0 do n @ dup d @
     \ n n d -- x
     \ n x -- dup
@@ -116,10 +120,11 @@ variable d
     \ -- 0 leave
     \ 0 -- then
     \ -- then
-    \ -- loop 1
-    primesetup \ ?
+    \ -- loop ret @
+    \ f
+    primesetup 1 ret ! \ FIXME
     0 do n @ dup d @ x dup rot
-	?witness if drop else r @ n @ -rot
-	    ?composite if 0 leave then
-	then
-    loop ; \ probably prime here
+      ?witness if drop else r @ n @ -rot
+        ?composite if 0 ret ! leave then
+    then
+    loop ret @ ; \ probably prime here
