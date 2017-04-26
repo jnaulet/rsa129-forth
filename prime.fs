@@ -7,13 +7,13 @@ variable d
 
 \ Setup 
 : p2fact ( n -- d r )
-    \ n -- 64 0 do
+    \ n -- 63 0 do
     \ d -- dup
     \ d d -- ?odd
-    \ d f -- if then
+    \ d f -- if
     \ d -- i
     \ d r -- leave
-    \
+    \ -- then
     \ d -- 2/
     \ d -- loop
     63 0 do dup ?odd if i leave then 2/ loop ;
