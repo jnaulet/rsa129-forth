@@ -1,5 +1,9 @@
+include rnd.fs
+
 \ Miller-Rabin primality test (64-bit)
-: a ( n -- 2 < a < n-2 ) 26 ;
+: a ( n -- 2 < a < n-2 )
+    2- 2 swap rndlimit ;
+
 : x ( n d -- x )
     \ n d -- over
     \ n d n -- a
