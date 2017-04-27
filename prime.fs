@@ -117,8 +117,8 @@ variable ret
     \ x r n -- -rot
     \ n x r -- ?composite
     \ f -- if
-    \ -- 0 leave
-    \ 0 -- then
+    \ -- 0 ret ! leave
+    \ -- then
     \ -- then
     \ -- loop ret @
     \ f

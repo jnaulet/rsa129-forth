@@ -23,3 +23,7 @@
 
 : square ( n -- n^2) dup * ;
 : ?odd ( n -- f ) 1 and ;
+
+\ Huge number functions
+: div ( n ... n n -- n n ... n ) \ number div nwords -- result mod nwords
+  0 do
